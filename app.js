@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', getTodos);
 
 todoButton.addEventListener('click', addTodo);
 todoList.addEventListener('click', deleteCheck);
-//BUG: ORIGINAL WAS TO LISTEN ON 'CLICK' but...
+//1. BUG SOLUTION: ORIGINAL WAS TO LISTEN ON 'CLICK' but...
 //it is better to listen for a 'change' on select fields
 //it only triggers when you change option!
 filterOption.addEventListener('change', filterTodo);
@@ -64,6 +64,9 @@ function deleteCheck(e) {
     if (item.classList[0] === 'complete-btn') {
         const todo = item.parentElement;
         todo.classList.toggle('completed');
+        //2. BUG SOLUTION: after item is checked, update the screen!
+        //move checked todo from unchecked list if you happen to check one while in unchecked list
+        filterTodo();
     }
 }
 
@@ -73,7 +76,9 @@ function filterTodo(e) {
     //because we use node list we can use forEach()
     todos.forEach(function (todo) {
         //option value from index.html
-        switch (e.target.value) {
+        //2. BUG SOLUTION: ORIGINAL was switch (e.target.value)
+        //this will allow function filterTodo() to be called anytime, not only inside the 'change' event
+        switch (filterOption.value) {
             case 'all':
                 //show all of them
                 todo.style.display = 'flex';
